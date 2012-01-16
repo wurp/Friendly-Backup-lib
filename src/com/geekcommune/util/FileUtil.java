@@ -2,6 +2,7 @@ package com.geekcommune.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -18,7 +19,10 @@ public class FileUtil {
     private static final Logger log = Logger.getLogger(FileUtil.class);
 
 	public byte[] getFileContents(File f) throws IOException {
-	    //TODO handle files > 2 gig
+	    if( f.length() > Integer.MAX_VALUE ) {
+	    	throw new IOException("Not reading full contents of > 2 gig file into memory");
+	    }
+	    
 		byte[] retval = new byte[(int)f.length()];
 		
 		FileInputStream fis = new FileInputStream(f);
@@ -95,15 +99,23 @@ public class FileUtil {
             log.error(e.getMessage(), e);
             UserLog.instance().logError("Failed to create file " + file + ", " + e.getMessage(), e);
         } finally {
-            if( out != null ) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    log.error("Failed while closing file " + file + ": " + e.getMessage(), e);
-                    UserLog.instance().logError("Probably failed to create file " + file + ", " + e.getMessage(), e);
-                }
-            }
+        	close(out, "Failed while closing file " + file);
         } //end try/finally
     }
 
+	public void close(BufferedOutputStream out, String message) {
+		close(out, message, log);
+	}
+
+	public void close(Closeable stream, String message, Logger logParam) {
+		if( stream != null ) {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				logParam.error(
+						message + ": " + e.getMessage(),
+						e);
+			}
+		}
+	}
 }
