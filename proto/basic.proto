@@ -1,5 +1,5 @@
 //cd ~/projects/Friendly-Backup-lib
-//build-bin/protoc --proto_path=proto --java_out=src-gen proto/basic.proto
+//build-bin/protoc --proto_path=proto --java_out=tmp/src-gen proto/basic.proto
 
 
 package geekcommune.friendlybackup;
@@ -86,5 +86,14 @@ message Lease {
   required PublicIdentityHandle ownerHandle = 3;
   required bool soft = 4;
   required HashIdentifier leasedData = 5;
+  required Signature signature = 6;
+}
+
+message ClientUpdate {
+  optional int32 version = 1 [default = 1];
+  required int64 storageAvailable = 2;
+  required string name = 3;
+  required string email = 4;
+  required bytes publicKeyRing = 5;
   required Signature signature = 6;
 }

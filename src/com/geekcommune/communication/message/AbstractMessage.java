@@ -84,17 +84,26 @@ public abstract class AbstractMessage implements Message {
         return originNodePort;
     }
 
-    public void read(DataInputStream is) throws IOException, FriendlyBackupException {
+    public final void read(DataInputStream is) throws IOException, FriendlyBackupException {
         transactionId = is.readInt();
         originNodePort = is.readInt();
+        internalRead(is);
     }
 
-    public void write(DataOutputStream os) throws IOException, FriendlyBackupException {
+    protected abstract void internalRead(DataInputStream is) throws IOException, FriendlyBackupException;
+
+	public final void write(DataOutputStream os) throws IOException, FriendlyBackupException {
+        os.writeInt(getType());
         os.writeInt(transactionId);
         os.writeInt(originNodePort);
+        internalWrite(os);
     }
 
-    public synchronized State getState() {
+    public abstract int getType();
+
+	protected abstract void internalWrite(DataOutputStream os) throws IOException, FriendlyBackupException;
+
+	public synchronized State getState() {
         return state;
     }
 

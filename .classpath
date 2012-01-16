@@ -3,7 +3,16 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="tmp/src-gen"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/protobuf-2.4.1.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/protobuf-2.4.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bcpg-jdk15-146.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bcprov-jdk15-146.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/concurrent-jaxed.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/fec-linux-x86.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/fec-win32.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hsqldb.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit-4.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/onion-common.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/onion-fec.jar"/>
 	<classpathentry kind="output" path="tmp/classes"/>
 </classpath>
