@@ -3,6 +3,7 @@ package com.geekcommune.communication;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import com.geekcommune.friendlybackup.FriendlyBackupException;
 import com.geekcommune.friendlybackup.format.BaseData;
 import com.geekcommune.friendlybackup.proto.Basic;
 
@@ -15,12 +16,19 @@ public class RemoteNodeHandle extends BaseData<Basic.RemoteNodeHandle> {
     private InetAddress address;
     private int port;
 
-    public RemoteNodeHandle(String name, String email, String connectString) throws UnknownHostException {
+    public RemoteNodeHandle(String name, String email, String connectString) throws FriendlyBackupException {
         this.name = name;
         this.email = email;
+
         String[] cstringPart = connectString.split(CONNECT_STRING_SEP);
-        this.address = InetAddress.getByName(cstringPart[0]);
-        this.port = Integer.parseInt(cstringPart[1]);
+
+        try {
+			this.address = InetAddress.getByName(cstringPart[0]);
+		} catch (UnknownHostException e) {
+            throw new FriendlyBackupException("Please double check the host name in " + cstringPart[0], e);
+		}
+
+		this.port = Integer.parseInt(cstringPart[1]);
     }
 
     public Basic.RemoteNodeHandle toProto() {
@@ -57,7 +65,7 @@ public class RemoteNodeHandle extends BaseData<Basic.RemoteNodeHandle> {
         return "RemoteNodeHandle(" + name + ", " + email + ", " + getConnectString() + ")"; 
     }
     
-    public static RemoteNodeHandle fromProto(Basic.RemoteNodeHandle proto) throws UnknownHostException {
+    public static RemoteNodeHandle fromProto(Basic.RemoteNodeHandle proto) throws FriendlyBackupException {
         versionCheck(1, proto.getVersion(), proto);
         
         String name = proto.getName();

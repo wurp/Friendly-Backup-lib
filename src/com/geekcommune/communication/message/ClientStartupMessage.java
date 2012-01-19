@@ -5,19 +5,30 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.geekcommune.communication.RemoteNodeHandle;
 import com.geekcommune.friendlybackup.FriendlyBackupException;
 import com.geekcommune.friendlybackup.proto.Basic;
 import com.geekcommune.friendlybackup.server.format.high.ClientUpdate;
+import com.geekcommune.util.UnaryContinuation;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class ClientStartupMessage extends AbstractMessage {
+/**
+ * Message to tell the server my info.
+ * @author wurp
+ */
+public class ClientStartupMessage extends AbstractMessage implements HasResponseHandler, UnaryContinuation<Message> {
 	private static final int INT_TYPE = 6;
 	
 	private byte[] data;
 
 	protected ClientStartupMessage(int transactionId, int originNodePort) {
 		super(transactionId, originNodePort);
+	}
+	
+	public ClientStartupMessage(RemoteNodeHandle rnh, int originNodePort, ClientUpdate cu) {
+		super(rnh, originNodePort);
+		data = cu.toProto().toByteArray();
 	}
 	
 	public ClientUpdate getClientUpdate() throws FriendlyBackupException {
@@ -69,6 +80,16 @@ public class ClientStartupMessage extends AbstractMessage {
         byte[] data = getData();
         os.writeInt(data.length);
         os.write(data);
+	}
+
+	@Override
+	public UnaryContinuation<Message> getResponseHandler() {
+		return this;
+	}
+
+	@Override
+	public void run(Message response) {
+		//TODO bobby
 	}
 
 }
