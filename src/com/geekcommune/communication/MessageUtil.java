@@ -25,7 +25,6 @@ import com.geekcommune.communication.message.AbstractMessage;
 import com.geekcommune.communication.message.HasResponseHandler;
 import com.geekcommune.communication.message.Message;
 import com.geekcommune.friendlybackup.FriendlyBackupException;
-import com.geekcommune.friendlybackup.communication.MessageHandler;
 import com.geekcommune.friendlybackup.logging.UserLog;
 import com.geekcommune.util.Pair;
 import com.geekcommune.util.UnaryContinuation;
