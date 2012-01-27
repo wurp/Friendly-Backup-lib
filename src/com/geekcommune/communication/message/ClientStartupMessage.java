@@ -4,6 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.Semaphore;
+
+import org.apache.log4j.Logger;
 
 import com.geekcommune.communication.RemoteNodeHandle;
 import com.geekcommune.friendlybackup.FriendlyBackupException;
@@ -18,9 +21,15 @@ import com.google.protobuf.InvalidProtocolBufferException;
  * @author wurp
  */
 public class ClientStartupMessage extends AbstractMessage implements HasResponseHandler, UnaryContinuation<Message> {
+    public static final Logger log = Logger.getLogger(ClientStartupMessage.class);
+    
 	private static final int INT_TYPE = 6;
 	
 	private byte[] data;
+
+	private ConfirmationMessage response;
+
+	private Semaphore responseSemaphore = new Semaphore(1);
 
 	protected ClientStartupMessage(int transactionId, int originNodePort) {
 		super(transactionId, originNodePort);
@@ -89,7 +98,24 @@ public class ClientStartupMessage extends AbstractMessage implements HasResponse
 
 	@Override
 	public void run(Message response) {
-		//TODO bobby
+		if( response instanceof ConfirmationMessage ) {
+			this.response = (ConfirmationMessage) response;
+			responseSemaphore.release();
+		} else {
+			log.warn("Found response of type " + 
+					(response == null ? null : response.getClass()) +
+					"; expected ConfirmationMessage");
+		}
+	}
+
+	public synchronized void awaitResponse(int timeout) throws InterruptedException {
+		if( response == null ) {
+			responseSemaphore.acquire(timeout);
+		}
+	}
+
+	public synchronized ConfirmationMessage getConfirmation() {
+		return response;
 	}
 
 }

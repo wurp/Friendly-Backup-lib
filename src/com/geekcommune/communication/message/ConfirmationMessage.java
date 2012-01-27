@@ -39,6 +39,10 @@ public class ConfirmationMessage extends AbstractMessage {
 		this.errorMessage = errorMessage;
 	}
 	
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+	
 	@Override
 	protected void internalRead(DataInputStream is) throws IOException,
 			FriendlyBackupException {

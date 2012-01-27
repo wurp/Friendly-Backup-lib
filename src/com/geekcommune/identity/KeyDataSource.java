@@ -1,5 +1,7 @@
 package com.geekcommune.identity;
 
+import java.util.Properties;
+
 public interface KeyDataSource {
 
     char[] getPassphrase();
@@ -8,4 +10,5 @@ public interface KeyDataSource {
 
     void clearPassphrase();
 
+	void initFromProps(String propNamePrefix, Properties props);
 }
