@@ -111,4 +111,8 @@ public class PublicIdentityHandle implements Data<Basic.PublicIdentityHandle>{
     public String getHandleString() {
     	return encryptingKeyID + "-" + signingKeyID;
     }
+    
+    public int hashCode() {
+        return getHandleString().hashCode();
+    }
 }

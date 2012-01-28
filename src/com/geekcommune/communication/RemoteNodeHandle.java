@@ -2,10 +2,13 @@ package com.geekcommune.communication;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.geekcommune.friendlybackup.FriendlyBackupException;
 import com.geekcommune.friendlybackup.format.BaseData;
 import com.geekcommune.friendlybackup.proto.Basic;
+import com.geekcommune.identity.PublicIdentityHandle;
 
 public class RemoteNodeHandle extends BaseData<Basic.RemoteNodeHandle> {
 
@@ -15,8 +18,9 @@ public class RemoteNodeHandle extends BaseData<Basic.RemoteNodeHandle> {
     private String email;
     private InetAddress address;
     private int port;
+    private PublicIdentityHandle publicIdentity;
 
-    public RemoteNodeHandle(String name, String email, String connectString) throws FriendlyBackupException {
+    public RemoteNodeHandle(String name, String email, String connectString, PublicIdentityHandle publicIdentity) throws FriendlyBackupException {
         this.name = name;
         this.email = email;
 
@@ -29,6 +33,8 @@ public class RemoteNodeHandle extends BaseData<Basic.RemoteNodeHandle> {
 		}
 
 		this.port = Integer.parseInt(cstringPart[1]);
+		
+		this.publicIdentity = publicIdentity;
     }
 
     public Basic.RemoteNodeHandle toProto() {
@@ -36,6 +42,7 @@ public class RemoteNodeHandle extends BaseData<Basic.RemoteNodeHandle> {
         bldr.setConnectString(getConnectString());
         bldr.setEmail(email);
         bldr.setName(name);
+        bldr.setPublicIdentity(publicIdentity.toProto());
         bldr.setVersion(1);
         
         return bldr.build();
@@ -49,7 +56,7 @@ public class RemoteNodeHandle extends BaseData<Basic.RemoteNodeHandle> {
     public boolean equals(Object obj) {
         if( obj instanceof RemoteNodeHandle ) {
             RemoteNodeHandle rhs = (RemoteNodeHandle) obj;
-            return name.equals(rhs.name) && email.equals(rhs.email) && getConnectString().equals(rhs.getConnectString());
+            return name.equals(rhs.name) && email.equals(rhs.email) && getConnectString().equals(rhs.getConnectString()) && publicIdentity.equals(rhs.publicIdentity);
         } else {
             return false;
         }
@@ -57,7 +64,7 @@ public class RemoteNodeHandle extends BaseData<Basic.RemoteNodeHandle> {
 
     @Override
     public int hashCode() {
-        return (name + "~" + email + "~" + getConnectString()).hashCode();
+        return (name + "~" + email + "~" + getConnectString() + "~" + publicIdentity.getHandleString()).hashCode();
     }
     
     @Override
@@ -71,10 +78,31 @@ public class RemoteNodeHandle extends BaseData<Basic.RemoteNodeHandle> {
         String name = proto.getName();
         String email = proto.getEmail();
         String connectString = proto.getConnectString();
+        PublicIdentityHandle publicIdentity =
+                PublicIdentityHandle.fromProto(proto.getPublicIdentity());
         
-        return new RemoteNodeHandle(name, email, connectString);
+        return new RemoteNodeHandle(name, email, connectString, publicIdentity);
     }
 
+    public static List<RemoteNodeHandle> fromProtoList(List<Basic.RemoteNodeHandle> protoList) throws FriendlyBackupException {
+        List<RemoteNodeHandle> retval = new ArrayList<RemoteNodeHandle>();
+        for(Basic.RemoteNodeHandle rnh : protoList) {
+            retval.add(RemoteNodeHandle.fromProto(rnh));
+        }
+        
+        return retval;
+    }
+
+    public static List<Basic.RemoteNodeHandle> toProtoList(
+            List<RemoteNodeHandle> rnhList) {
+        List<Basic.RemoteNodeHandle> retval = new ArrayList<Basic.RemoteNodeHandle>();
+        for(RemoteNodeHandle rnh : rnhList) {
+            retval.add(rnh.toProto());
+        }
+        
+        return retval;
+    }
+    
     public InetAddress getAddress() {
         return address;
     }
@@ -89,5 +117,13 @@ public class RemoteNodeHandle extends BaseData<Basic.RemoteNodeHandle> {
 
     public String getEmail() {
         return email;
+    }
+
+    public PublicIdentityHandle getPublicIdentity() {
+        return publicIdentity;
+    }
+
+    public void setPublicIdentity(PublicIdentityHandle publicIdentity) {
+        this.publicIdentity = publicIdentity;
     }
 }

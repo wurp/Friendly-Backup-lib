@@ -23,6 +23,7 @@ message RemoteNodeHandle {
   required string name = 2;
   required string email = 3;
   required string connectString = 4;
+  required PublicIdentityHandle publicIdentity = 5;
 }
 
 message Erasure {
@@ -96,4 +97,12 @@ message ClientUpdate {
   required string email = 4;
   required bytes publicKeyRing = 5;
   required Signature signature = 6;
+}
+
+//TODO bobby in progress
+message FriendListUpdate {
+  optional int32 version = 1 [default = 1];
+  required bool removeAllCurrent = 2;
+  repeated RemoteNodeHandle friendsToRemove = 3;
+  repeated RemoteNodeHandle friendsToAdd = 4;
 }

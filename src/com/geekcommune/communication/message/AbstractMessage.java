@@ -146,7 +146,14 @@ public abstract class AbstractMessage implements Message {
         return msg;
     }
 
-    public static void registerMessageFactory(int msgType, MessageFactory factory) {
+
+    public static void registerMessageFactory(int msgType, MessageFactory factory) throws FriendlyBackupException {
+        MessageFactory messageFactory = messageFactories.get(msgType);
+        if( messageFactory != null && !messageFactory.equals(factory) ) {
+            throw new FriendlyBackupException("Attempt to register " + 
+                    factory + " as factory for type " + msgType + " when " +
+                    messageFactory + " is already registered");
+        }
         messageFactories.put(msgType, factory);
     }
 }

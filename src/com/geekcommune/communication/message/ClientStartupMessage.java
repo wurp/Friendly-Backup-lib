@@ -1,10 +1,7 @@
 package com.geekcommune.communication.message;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -17,19 +14,19 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
- * Message to tell the server my info.
+ * Message to tell the server my info, so it can know if I have space to be a storage node,
+ * how to contact me to see if I have good uptime, and the information needed to tell someone
+ * else how to make me their friend.
  * @author wurp
  */
-public class ClientStartupMessage extends AbstractMessage implements HasResponseHandler, UnaryContinuation<Message> {
+public class ClientStartupMessage extends AbstractDataMessage implements HasResponseHandler, UnaryContinuation<Message> {
     public static final Logger log = Logger.getLogger(ClientStartupMessage.class);
     
 	private static final int INT_TYPE = 6;
-	
-	private byte[] data;
 
 	private ConfirmationMessage response;
 
-	private Semaphore responseSemaphore = new Semaphore(1);
+	private Semaphore responseSemaphore = new Semaphore(0);
 
 	protected ClientStartupMessage(int transactionId, int originNodePort) {
 		super(transactionId, originNodePort);
@@ -44,51 +41,13 @@ public class ClientStartupMessage extends AbstractMessage implements HasResponse
 		try {
 			return ClientUpdate.fromProto(Basic.ClientUpdate.parseFrom(ByteString.copyFrom(getData())));
 		} catch (InvalidProtocolBufferException e) {
-			throw new FriendlyBackupException("Could not retrieve client update data", e);
+			throw new FriendlyBackupException("Could not parse client update data", e);
 		}
-	}
-
-	private byte[] getData() {
-		return data;
 	}
 
 	@Override
 	public int getType() {
 		return INT_TYPE;
-	}
-
-	@Override
-	protected void internalRead(DataInputStream is) throws IOException,
-			FriendlyBackupException {
-        int len = is.readInt();
-        
-        if( len != 0 ) {
-            data = new byte[len];
-            readBytes(is, data, 0, data.length);
-//            if( data.length != bytesRead ) {
-//                int remaining = is.read();
-//                throw new RuntimeException("Could not read all " + data.length + " bytes, found " + bytesRead + ", found " + remaining + " when looking for more data");
-//            }
-        }
-	}
-
-    private void readBytes(InputStream is, byte[] data, int startIdx, int length) throws IOException {
-        int total = 0;
-        while( total < length ) {
-            int lastRead = is.read(data, startIdx + total, length - total);
-            if( lastRead == -1 ) {
-                throw new RuntimeException("Could not read all " + length + " bytes, found " + total + ", before hitting end of stream");
-            }
-            total += lastRead;
-        }
-    }
-
-	@Override
-	protected void internalWrite(DataOutputStream os) throws IOException,
-			FriendlyBackupException {
-        byte[] data = getData();
-        os.writeInt(data.length);
-        os.write(data);
 	}
 
 	@Override
@@ -108,9 +67,11 @@ public class ClientStartupMessage extends AbstractMessage implements HasResponse
 		}
 	}
 
-	public synchronized void awaitResponse(int timeout) throws InterruptedException {
+	public synchronized boolean awaitResponse(int timeout) throws InterruptedException {
 		if( response == null ) {
-			responseSemaphore.acquire(timeout);
+			return responseSemaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS);
+		} else {
+		    return true;
 		}
 	}
 

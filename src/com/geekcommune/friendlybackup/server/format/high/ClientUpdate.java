@@ -14,7 +14,7 @@ import com.google.protobuf.ByteString;
  * 
  * @author wurp
  */
-public class ClientUpdate extends BaseData<Basic.ClientUpdate>{
+public class ClientUpdate extends BaseData<Basic.ClientUpdate> {
 	//private static final Logger log = Logger.getLogger(ClientUpdate.class);
 	
 	private String email;
