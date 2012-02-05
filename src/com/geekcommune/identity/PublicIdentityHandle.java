@@ -115,4 +115,12 @@ public class PublicIdentityHandle implements Data<Basic.PublicIdentityHandle>{
     public int hashCode() {
         return getHandleString().hashCode();
     }
+    
+    public boolean equals(Object rhs) {
+        if( rhs instanceof PublicIdentityHandle ) {
+            return getHandleString().equals(((PublicIdentityHandle)rhs).getHandleString());
+        } else {
+            return false;
+        }
+    }
 }
