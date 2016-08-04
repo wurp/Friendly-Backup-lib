@@ -20,34 +20,41 @@
 		</repository>
 	</distributionManagement>
 	<dependencies>
-		<!-- TODO switch all systemPath dependencies to proper Maven dependencies -->
 		<dependency>
-			<groupId>bc</groupId>
-			<artifactId>pg-jdk15</artifactId>
-			<version>0.0.146</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/bcpg-jdk15-146.jar</systemPath>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpg-jdk15on</artifactId>
+			<version>1.46</version>
 		</dependency>
 		<dependency>
-			<groupId>bc</groupId>
-			<artifactId>prov-jdk15</artifactId>
-			<version>0.0.146</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/bcprov-jdk15-146.jar</systemPath>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.46</version>
 		</dependency>
 		<dependency>
-			<groupId>concurrent-jaxed</groupId>
-			<artifactId>concurrent-jaxed</artifactId>
-			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/concurrent-jaxed.jar</systemPath>
+			<groupId>concurrent</groupId>
+			<artifactId>concurrent</artifactId>
+			<version>1.3.4</version>
 		</dependency>
 		<dependency>
-			<groupId>fec</groupId>
-			<artifactId>fec</artifactId>
-			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/fec-linux-x86.jar</systemPath>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>2.4.1</version>
+		</dependency>
+		<!-- TODO get these into proper Maven dependencies. They're manually installed into maven now -->
+		<dependency>
+			<groupId>com.onionnetworks.fec</groupId>
+			<artifactId>fec-linux-x86</artifactId>
+			<version>1.0</version>
 		</dependency>
 		<!-- dependency>
 			<groupId></groupId>
@@ -57,37 +64,14 @@
 			<systemPath>${project.basedir}/lib/fec-win32.jar</systemPath>
 		</dependency -->
 		<dependency>
-			<groupId>hsql</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/hsqldb.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/log4j-1.2.16.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>onion</groupId>
+			<groupId>com.onionnetworks.fec</groupId>
 			<artifactId>onion-common</artifactId>
-			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/onion-common.jar</systemPath>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>onion</groupId>
+			<groupId>com.onionnetworks.fec</groupId>
 			<artifactId>onion-fec</artifactId>
-			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/onion-fec.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java</artifactId>
-			<version>2.4.1</version>
+			<version>1.0</version>
 		</dependency>
 		<!-- Test Artifacts -->
 		<dependency>
