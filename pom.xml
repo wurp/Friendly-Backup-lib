@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.geekcommune.friendlybackup</groupId>
+	<artifactId>friendly-backup-lib</artifactId>
+	<version>0.0.1</version>
+	<packaging>jar</packaging>
+	<name>friendly backup lib</name>
+	<description>Shared classes and utilities for Friendly Backup.</description>
+	<inceptionYear>2011</inceptionYear>
+	<properties>
+		<required.code.coverage>0.800</required.code.coverage>
+	</properties>
+	
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
+	</distributionManagement>
+	<dependencies>
+		<!-- TODO switch all systemPath dependencies to proper Maven dependencies -->
+		<dependency>
+			<groupId>bc</groupId>
+			<artifactId>pg-jdk15</artifactId>
+			<version>0.0.146</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/bcpg-jdk15-146.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>bc</groupId>
+			<artifactId>prov-jdk15</artifactId>
+			<version>0.0.146</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/bcprov-jdk15-146.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>concurrent-jaxed</groupId>
+			<artifactId>concurrent-jaxed</artifactId>
+			<version>0.0.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/concurrent-jaxed.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>fec</groupId>
+			<artifactId>fec</artifactId>
+			<version>0.0.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/fec-linux-x86.jar</systemPath>
+		</dependency>
+		<!-- dependency>
+			<groupId></groupId>
+			<artifactId></artifactId>
+			<version>0.0.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/fec-win32.jar</systemPath>
+		</dependency -->
+		<dependency>
+			<groupId>hsql</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>0.0.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/hsqldb.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/log4j-1.2.16.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>onion</groupId>
+			<artifactId>onion-common</artifactId>
+			<version>0.0.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/onion-common.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>onion</groupId>
+			<artifactId>onion-fec</artifactId>
+			<version>0.0.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/onion-fec.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>2.4.1</version>
+		</dependency>
+		<!-- Test Artifacts -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.3.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+	<plugins>
+		<plugin>
+			<groupId>com.github.os72</groupId>
+			<artifactId>protoc-jar-maven-plugin</artifactId>
+			<version>3.0.0</version>
+			<executions>
+				<execution>
+					<phase>generate-sources</phase>
+					<goals>
+						<goal>run</goal>
+					</goals>
+					<configuration>
+						<protocVersion>2.4.1</protocVersion> <!-- 2.4.1, 2.5.0, 2.6.1, 3.0.0 -->
+						<includeDirectories>
+							<include>src/main/protobuf</include>
+						</includeDirectories>
+						<inputDirectories>
+							<include>src/main/protobuf</include>
+						</inputDirectories>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+	</plugins>
+	</build>
+</project>
