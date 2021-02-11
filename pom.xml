@@ -12,6 +12,8 @@
 		<required.code.coverage>0.800</required.code.coverage>
 		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
 		<github.global.server>github</github.global.server>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
 	
 	<distributionManagement>
