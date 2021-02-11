@@ -1,1 +1,5 @@
 See https://github.com/wurp/Friendly-Backup/wiki
+
+To update Friendly-Backup-lib for consumption by Friendly-Backup-poc,
+mvn install deploy
+./wurp-deploy.sh
