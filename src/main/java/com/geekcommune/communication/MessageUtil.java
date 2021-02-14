@@ -190,18 +190,19 @@ public abstract class MessageUtil {
 	    listenThread = new Thread(new Runnable() {
 	        public void run() {
 	            try {
-	                ServerSocket serversocket = null;
-	                serversocket = new ServerSocket(getLocalPort());
-	                log.debug("server socket listening on " + getLocalPort());
-	                do {
-	                    try {
-	                        Socket socket = serversocket.accept();
-	                        log.debug("Server socket open");
-	                        listenExecutor.execute(makeHandleAllMessagesOnSocketRunnable(socket));
-	                    } catch(Exception e) {
-	                        log.error(e.getMessage(), e);
-	                    }
-	                } while (true);
+	                try (ServerSocket serversocket = new ServerSocket(getLocalPort())) {
+		                log.debug("server socket listening on " + getLocalPort());
+		                do {
+		                    try {
+		                        Socket socket = serversocket.accept();
+		                        log.debug("Server socket open");
+		                        listenExecutor.execute(makeHandleAllMessagesOnSocketRunnable(socket));
+		                    } catch(Exception e) {
+		                        log.error(e.getMessage(), e);
+		                    }
+		                } while (true);
+	                }
+	                
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	                log.error("Couldn't start listening for unsolicited messages: " + e.getMessage(), e);

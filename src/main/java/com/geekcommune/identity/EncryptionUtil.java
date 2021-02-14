@@ -1420,7 +1420,7 @@ public class EncryptionUtil {
         while (retval == null && kIt.hasNext()) {
             PGPPublicKey k = kIt.next();
             PGPSecretKey sk = secretKeyRings.getSecretKey(k.getKeyID());
-            if( sk.isSigningKey() ) {
+            if( sk != null && sk.isSigningKey() ) {
                 retval = sk;
             }
         }
