@@ -170,6 +170,14 @@ public class EncryptionUtil {
     }
 
     public PGPSecretKey generateKey(String identity, char[] passPhrase) throws PGPException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+    	if (identity == null) {
+    		throw new IllegalArgumentException("identity is null");
+    	}
+    	
+    	if (passPhrase == null) {
+    		throw new IllegalArgumentException("passPhrase is null");
+    	}
+    	
         KeyPairGenerator    kpg = KeyPairGenerator.getInstance("RSA", "BC");
         kpg.initialize(2048);
         KeyPair                    kp = kpg.generateKeyPair();
@@ -217,7 +225,7 @@ public class EncryptionUtil {
     
     /**
      * Encrypt and sign the specified input file.  If you pass in a seed, you
-     * will get the same encrypted output for the same file + same seed + same signor.
+     * will get the same encrypted output for the same file + same seed + same signer.
      * 
      * DANGER!  If you use the same seed for multiple different messages, you are
      * making your key stream vulnerable to hacking, and your encryption is near
@@ -928,8 +936,8 @@ public class EncryptionUtil {
                 System.out.println("Signature verified");
             } else {
                 // what?
-                // System.out.println("Unrecognised message type");
-                throw new PGPException("Unrecognised PGP message type: " + message.getClass());
+                // System.out.println("Unrecognized message type");
+                throw new PGPException("Unrecognized PGP message type: " + message.getClass());
             }
 
             if (pked != null) {
@@ -1036,14 +1044,16 @@ public class EncryptionUtil {
                 outputFilename = ld.getFileName();
             }
 
-            FileOutputStream fOut = new FileOutputStream(outputFilename);
+            try (FileOutputStream fOut = new FileOutputStream(outputFilename))
+            {
+                InputStream unc = ld.getInputStream();
 
-            InputStream unc = ld.getInputStream();
-
-            int ch;
-            while ((ch = unc.read()) >= 0) {
-                fOut.write(ch);
+                int ch;
+                while ((ch = unc.read()) >= 0) {
+                    fOut.write(ch);
+                }
             }
+
 
             if (pbe.isIntegrityProtected()) {
                 if (!pbe.verify()) {
@@ -1140,7 +1150,7 @@ public class EncryptionUtil {
         throws PGPException {
         try {
             //
-            // read the input, making sure we ingore the last newline.
+            // read the input, making sure we ignore the last newline.
             //
             ArmoredInputStream aIn = (ArmoredInputStream) in;
             boolean newLine = false;
