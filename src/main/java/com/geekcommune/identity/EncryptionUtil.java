@@ -171,16 +171,25 @@ public class EncryptionUtil {
 
     public PGPSecretKey generateKey(String identity, char[] passPhrase) throws PGPException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
     	if (identity == null) {
-    		throw new IllegalArgumentException("identity is null");
+    		throw new PGPException("identity is null");
     	}
     	
     	if (passPhrase == null) {
-    		throw new IllegalArgumentException("passPhrase is null");
+    		throw new PGPException("passPhrase is null");
     	}
     	
         KeyPairGenerator    kpg = KeyPairGenerator.getInstance("RSA", "BC");
         kpg.initialize(2048);
         KeyPair                    kp = kpg.generateKeyPair();
+
+        if (kp.getPublic().getEncoded() == null) {
+        	throw new PGPException("Found null public key for generated KeyPair");
+        }
+
+        if (kp.getPrivate().getEncoded() == null) {
+        	throw new PGPException("Found null private key for generated KeyPair");
+        }
+        
         PGPSecretKey    secretKey =
                 new PGPSecretKey(
                         PGPSignature.DEFAULT_CERTIFICATION,
@@ -1640,6 +1649,9 @@ public class EncryptionUtil {
         boolean pubRingFound = publicKeyRingFile.isFile();
         boolean secRingFound = secretKeyRingFile.isFile();
         
+        log.info("Found " + publicKeyRingFile + ": " + pubRingFound);
+        log.info("Found " + secretKeyRingFile + ": " + pubRingFound);
+
         if( pubRingFound != secRingFound ) {
             throw new PGPException("Expect both public & secret keyring, or neither: " + publicKeyRingFile + ", " + secretKeyRingFile);
         }
@@ -1651,8 +1663,12 @@ public class EncryptionUtil {
             retval.setFirst(EncryptionUtil.instance().readPublicKeyRingCollection(publicKeyRingFile));
             retval.setSecond(EncryptionUtil.instance().readSecretKeyRingCollection(secretKeyRingFile));
         } else {
-            if( publicKeyRingFile.exists() || secretKeyRingFile.exists() ) {
-                throw new PGPException("Either public or secret keyring not a normal file: " + publicKeyRingFile + ", " + secretKeyRingFile);
+            if( publicKeyRingFile.exists() ) {
+                throw new PGPException("public keyring not a normal file: " + publicKeyRingFile);
+            }
+            
+            if( secretKeyRingFile.exists() ) {
+                throw new PGPException("secret keyring not a normal file: " + secretKeyRingFile);
             }
             
             PGPSecretKey key =
