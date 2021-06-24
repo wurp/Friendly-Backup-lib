@@ -1650,7 +1650,7 @@ public class EncryptionUtil {
         boolean secRingFound = secretKeyRingFile.isFile();
         
         log.info("Found " + publicKeyRingFile + ": " + pubRingFound);
-        log.info("Found " + secretKeyRingFile + ": " + pubRingFound);
+        log.info("Found " + secretKeyRingFile + ": " + secRingFound);
 
         if( pubRingFound != secRingFound ) {
             throw new PGPException("Expect both public & secret keyring, or neither: " + publicKeyRingFile + ", " + secretKeyRingFile);

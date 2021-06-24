@@ -19,23 +19,23 @@ import com.google.protobuf.ByteString;
  */
 public class HashIdentifier extends BaseData<Basic.HashIdentifier> {
 
-	//size in bytes
-	public static final int SIZEOF = 20;
+    //size in bytes
+    public static final int SIZEOF = 20;
     public static final HashIdentifier Dummy = new HashIdentifier(new byte[20]);
     
     private byte[] digest;
 
-	public HashIdentifier(byte[] digest) {
-	    if( digest.length != SIZEOF ) {
-	        throw new RuntimeException("Hash identifiers must be of length 20, was " + digest.length);
-	    }
-	    
-	    this.digest = digest;
+    public HashIdentifier(byte[] digest) {
+        if( digest.length != SIZEOF ) {
+            throw new RuntimeException("Hash identifiers must be of length 20, was " + digest.length);
+        }
+        
+        this.digest = digest;
     }
 
     public byte[] getData() {
-		return digest;
-	}
+        return digest;
+    }
 
     public static HashIdentifier hashForBytes(byte[] data) {
         MessageDigest md = null;
