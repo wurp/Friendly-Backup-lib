@@ -23,7 +23,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.bouncycastle.bcpg.ArmoredInputStream;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.BCPGOutputStream;
@@ -81,7 +82,7 @@ import com.geekcommune.util.Pair;
  */
 
 public class EncryptionUtil {
-    private static final Logger log = Logger.getLogger(EncryptionUtil.class);
+    private static final Logger log = LogManager.getLogger(EncryptionUtil.class);
 
     private static final boolean _verbose = false;
     private static EncryptionUtil instance = new EncryptionUtil();
@@ -111,8 +112,7 @@ public class EncryptionUtil {
         } else {
             for (int i = 0; i < children.length; i++) {
                 String filename = children[i];
-                log.info("File Name (.asc) " + "(" + i + ")"
-                        + " = " + filename);
+                log.info("File Name (.asc) ({}) = {}", i, filename);
                 PGPPublicKeyRingCollection tmpKeyRingCollection = readPublicKeyRingCollection(new File(dir, filename));
 
                 if (pubRings == null) {
@@ -139,8 +139,7 @@ public class EncryptionUtil {
             }// end of for
 
             // size should equal the number of the .asc files
-            log.debug("Collection size = "
-                    + pubRings.size());
+            log.debug("Collection size = {}", pubRings.size());
         }// end of else
         
         return pubRings;
@@ -1649,8 +1648,8 @@ public class EncryptionUtil {
         boolean pubRingFound = publicKeyRingFile.isFile();
         boolean secRingFound = secretKeyRingFile.isFile();
         
-        log.info("Found " + publicKeyRingFile + ": " + pubRingFound);
-        log.info("Found " + secretKeyRingFile + ": " + secRingFound);
+        log.info("Found {}: {}", publicKeyRingFile, pubRingFound);
+        log.info("Found {}: {}", secretKeyRingFile, secRingFound);
 
         if( pubRingFound != secRingFound ) {
             throw new PGPException("Expect both public & secret keyring, or neither: " + publicKeyRingFile + ", " + secretKeyRingFile);

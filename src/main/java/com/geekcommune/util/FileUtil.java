@@ -11,12 +11,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.geekcommune.friendlybackup.logging.UserLog;
 
 public class FileUtil {
-    private static final Logger log = Logger.getLogger(FileUtil.class);
+    private static final Logger log = LogManager.getLogger(FileUtil.class);
 
 	public byte[] getFileContents(File f) throws IOException {
 	    if( f.length() > Integer.MAX_VALUE ) {
@@ -94,10 +95,10 @@ public class FileUtil {
             out.write(t);
         } catch (FileNotFoundException e) {
             log.error(e.getMessage(), e);
-            UserLog.instance().logError("No directory in which to create file " + file, e);
+            UserLog.instance().logException(e, "No directory in which to create file {}", file);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            UserLog.instance().logError("Failed to create file " + file + ", " + e.getMessage(), e);
+            UserLog.instance().logException(e, "Failed to create file {}", file, e);
         } finally {
         	close(out, "Failed while closing file " + file);
         } //end try/finally

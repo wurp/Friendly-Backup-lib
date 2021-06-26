@@ -2,9 +2,11 @@ package com.geekcommune.friendlybackup.logging;
 
 public abstract class UserLog {
 
-	public abstract void logError(String message, Exception e);
+    public abstract void logException(Exception e, String message, Object... params);
 
-    public abstract void logError(String message);
+    public abstract void logError(String message, Object... params);
+
+    public abstract void logInfo(String string, Object... params);
 
 	protected static UserLog instance;
 	
@@ -15,15 +17,4 @@ public abstract class UserLog {
     public static void setInstance(UserLog userLog) {
         instance = userLog;
     }
-
-    public void info(String statusMessage) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void logInfo(String string) {
-        // TODO Auto-generated method stub
-        
-    }
-
 }
